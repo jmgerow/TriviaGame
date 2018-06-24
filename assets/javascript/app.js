@@ -5,3 +5,36 @@
 // need to automatically go to next question
 // when all questions are completed, show score
 // add reset button to score page to reset game
+
+var startButton = "Start";
+var timer = 90;
+var firstQuestion = "first question";
+var firstChoices = ["first", "second", "third", "fourth"];
+var firstAnswer = [];
+var firstGuess = [];
+
+
+$(document).ready(function() {
+
+    $("#start").append(startButton);
+
+    $("#start").on("click", function() {
+
+        $("#start").empty();
+ 
+
+        $("#timer").append(timer);
+
+        $("#question").append(firstQuestion);
+
+        $("#firstChoice").append(firstChoices[0]);
+        $("#secondChoice").append(firstChoices[1]);
+        $("#thirdChoice").append(firstChoices[2]);
+        $("#fourthChoice").append(firstChoices[3]);
+    })
+
+    
+        
+
+
+});    
