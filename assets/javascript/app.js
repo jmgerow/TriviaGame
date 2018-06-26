@@ -11,67 +11,44 @@ var timer = 20;
 var correctGuesses = 0;
 var incorrectGuesses = 0;
 var unansweredQuestions = 0;
-// var answer = [];
-// var guess = [];
+var answer = "";
+var guess = "";
 var questions = [
          {
-            question: "first question",
-            choices: ["first", "second", "third", "fourth"],
-            answer: "first"
+            question: "Which actor was in both 'Jurassic Park' and 'Thor Ragnarok?'",
+            choices: ["Ryan Reynolds", "Chris Pratt", "Jeff Goldblum", "Heath Ledger"],
+            answer: "Jeff Goldblum"
         },
          {
-            question: "second question",
-            choices: ["first2", "second2", "third2", "fourth2"],
-            answer: "second2"
+            question: "What car did Baby drive in the opening scene of 'Baby Driver'?",
+            choices: ["Chevy Camaro", "Subaru WRX", "Dodge Charger", "Dodge Caravan"],
+            answer: "Subaru WRX"
         },
          {
-            question: "third question",
-            choices: ["first3", "second3", "third3", "fourth3"],
-            answer: "third3"
+            question: "What movie did Jason Bateman and Rachel McAdams recently star in?",
+            choices: ["Date Night", "The Arrival", "The Circle", "Fast and Furious"],
+            answer: "Date Night"
         },
         {
-            question: "fourth question",
-            choices: ["first3", "second3", "third3", "fourth3"],
-            answer: "third3"
+            question: "Which actor has not played James Bond",
+            choices: ["Daniel Craig", "George Lazenby", "Roger Moore", "Harrison Ford"],
+            answer: "Harrison Ford"
         },
         {
-            question: "fifth question",
-            choices: ["first3", "second3", "third3", "fourth3"],
-            answer: "third3"
+            question: "How fast does the Delorean need to move in order to initiate time travel in 'Back to the Future'?",
+            choices: ["55mph", "77mph", "105mph", "88mph"],
+            answer: "88mph"
         },
         {
-            question: "sixth question",
-            choices: ["first3", "second3", "third3", "fourth3"],
-            answer: "third3"
-        },
-        {
-            question: "seventh question",
-            choices: ["first3", "second3", "third3", "fourth3"],
-            answer: "third3"
-        },
-        {
-            question: "eighth question",
-            choices: ["first3", "second3", "third3", "fourth3"],
-            answer: "third3"
-        }      
+            question: "What is the most confusing show ever made?",
+            choices: ["Westworld", "Westworld", "Westworld", "Westworld"],
+            answer: "Westworld"
+        }
+             
     ];
 
-var nextQuestion = false;    
-var intervalId;
-
-    function run() {
-        clearInterval(intervalId);
-        intervalId = setInterval(decrement, 1000);
-      };
-    
-      function decrement() {
-    
-        timer--;
-
-        $("#timer").html(timer);
-      } ;   
-
-        
+   
+var counter = 0;        
 
 $(document).ready(function() {
      //begin game
@@ -85,23 +62,39 @@ $(document).ready(function() {
      
      })
 
-    var counter = 0;
-    var finalScore= function(){
-        $("#question").empty();
-        $("#firstChoice").html("Correct guesses: " + correctGuesses);
-        $("#secondChoice").html("Incorrect guesses: " + incorrectGuesses);
-        $("#thirdChoice").html("Unanswered questions: " + unansweredQuestions);
-        $("#fourthChoice").empty();
-    } 
-    
     // load questionOne
     
     var questionOne = function() {
+        $("#resetButton").empty();
         $("#start").empty();
-        var answer = questions[counter].answer;
-        var guess = "";
+        answer = "";
+        guess = "";
+        answer = questions[counter].answer;
+
+        // create interval for time and stop... ****Stop is not working****
+        
+        timer = 20;
         $("#timer").html(timer);
+        var intervalId;
+
+            function run() {
+                clearInterval(intervalId);
+                intervalId = setInterval(decrement, 1000);
+            };
+     
+
+            function decrement() {
+            
+                timer--;
+
+                $("#timer").html(timer);
+            };
+      
+            function stop() {
+                clearInterval(intervalId);  
+            };
         run();
+
 
         $("#question").html(questions[counter].question);
 
@@ -140,8 +133,11 @@ $(document).ready(function() {
             $("#fourthChoice").empty();
             $("#question").html("Correct!");
             correctGuesses ++;
-            nextQuestion = true;
-        } else {
+            questionProgress();
+
+        }; 
+        
+        if (guess != answer) {
             $("#timer").empty();
             $("#secondChoice").empty();
             $("#thirdChoice").empty();
@@ -149,39 +145,70 @@ $(document).ready(function() {
             $("#question").html("Wrong!");
             $("#firstChoice").html("The correct answer is " + answer);
             incorrectGuesses ++;
-            nextQuestion = true;
-        }
-        // timer is not expiring at 0 - need to fix
+            questionProgress(); 
+        };
+        // timer is not expiring at 0 - need to fix  
         if (timer === 0){
-            $("#timer").empty();
+            stop();
             $("#secondChoice").empty();
             $("#thirdChoice").empty();
             $("#fourthChoice").empty();
             $("#question").html("Time's up!");
             $("#firstChoice").html("The correct answer is " + answer);
             unansweredQuestions ++;
-            nextQuestion = true; 
+            questionProgress();
         };
+        
+        
         };
-        console.log(counter);
-        console.log(guess); 
-        console.log(nextQuestion);
+
+        console.log("counter " + counter);
+        console.log("guess " + guess); 
+        // console.log(nextQuestion);
+        console.log("correct " + correctGuesses);
+        console.log("incorrect guesses " + incorrectGuesses);
+        console.log(unansweredQuestions);
+        console.log("answer " + answer);
        //need to fix progression to next question 
-       if (counter < questions.length){
-        counter ++;
-        setTimeout(fiveSeconds, 1000 * 5);   
-        //insert 4 second delay here before recalling question
-        function fiveSeconds() {
-        questionOne();
-        };
-       } else{
-        // finalScore();
-       }
-
-
-  
-    };
        
+    };
 
+    
+
+    var questionProgress = function (){
+        if (counter < 5){
+         counter ++;
+         setTimeout(autoTransition, 1000 * 3);  
+         
+         function autoTransition() { 
+         questionOne();
+         }
+        } else {
+         finalScore();
+        };
+     };
+
+    var finalScore = function(){
+        $("#timer").empty();
+        $("#question").empty();
+        $("#firstChoice").html("Correct guesses: " + correctGuesses);
+        $("#secondChoice").html("Incorrect guesses: " + incorrectGuesses);
+        $("#thirdChoice").html("Unanswered questions: " + unansweredQuestions);
+        $("#resetButton").html("Start Over?");
+        $("#resetButton").on("click", function() {
+            startButton = "Start";
+            timer = 20;
+            correctGuesses = 0;
+            incorrectGuesses = 0;
+            unansweredQuestions = 0;
+            answer = "";
+            guess = "";
+            counter = 0;    
+            questionOne();   
+        });
+        
+    };
+    
+    
 
 });    
