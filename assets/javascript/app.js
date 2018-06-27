@@ -13,6 +13,7 @@ var incorrectGuesses = 0;
 var unansweredQuestions = 0;
 var answer = "";
 var guess = "";
+var counter = 0;        
 var questions = [
          {
             question: "Which actor was in both 'Jurassic Park' and 'Thor Ragnarok?'",
@@ -46,9 +47,30 @@ var questions = [
         }
              
     ];
+    $("#timer").html(timer);
+    var intervalId;
 
-   
-var counter = 0;        
+        function run() {
+            clearInterval(intervalId);
+            intervalId = setInterval(decrement, 1000);
+        };
+ 
+
+        function decrement() {
+           
+            timer--;
+            $("#timer").html(timer);
+        if (timer === 0){       
+            
+            stop();
+            answerChecker();
+        }
+        };
+  
+        function stop() {
+            clearInterval(intervalId);  
+        };
+          
 
 $(document).ready(function() {
      //begin game
@@ -57,8 +79,8 @@ $(document).ready(function() {
      // load first question
      $("#start").on("click", function() {
        
- 
-     questionOne();
+    run(); 
+    questionOne();
      
      })
 
@@ -74,28 +96,8 @@ $(document).ready(function() {
         // create interval for time and stop... ****Stop is not working****
         
         timer = 20;
-        $("#timer").html(timer);
-        var intervalId;
-
-            function run() {
-                clearInterval(intervalId);
-                intervalId = setInterval(decrement, 1000);
-            };
-     
-
-            function decrement() {
-            
-                timer--;
-
-                $("#timer").html(timer);
-            };
-      
-            function stop() {
-                clearInterval(intervalId);  
-            };
-        run();
-
-
+       
+    
         $("#question").html(questions[counter].question);
 
         $("#firstChoice").html(questions[counter].choices[0]);
@@ -124,7 +126,21 @@ $(document).ready(function() {
             answerChecker();  
         });
 
-        var answerChecker = function(){
+        
+
+        console.log("counter " + counter);
+        console.log("guess " + guess); 
+        // console.log(nextQuestion);
+        console.log("correct " + correctGuesses);
+        console.log("incorrect guesses " + incorrectGuesses);
+        console.log(unansweredQuestions);
+        console.log("answer " + answer);
+       //need to fix progression to next question
+        console.log("questions length " + questions.length); 
+       
+    };
+
+    var answerChecker = function(){
         if (guess === answer){
             $("#timer").empty();
             $("#firstChoice").empty();
@@ -134,6 +150,7 @@ $(document).ready(function() {
             $("#question").html("Correct!");
             correctGuesses ++;
             questionProgress();
+            console.log("counter correct" + counter);
 
         }; 
         
@@ -146,10 +163,11 @@ $(document).ready(function() {
             $("#firstChoice").html("The correct answer is " + answer);
             incorrectGuesses ++;
             questionProgress(); 
+            console.log("counter incorrect" + counter);
         };
         // timer is not expiring at 0 - need to fix  
         if (timer === 0){
-            stop();
+            // stop();
             $("#secondChoice").empty();
             $("#thirdChoice").empty();
             $("#fourthChoice").empty();
@@ -157,33 +175,24 @@ $(document).ready(function() {
             $("#firstChoice").html("The correct answer is " + answer);
             unansweredQuestions ++;
             questionProgress();
+            console.log("counter timeup" + counter);
         };
         
         
         };
-
-        console.log("counter " + counter);
-        console.log("guess " + guess); 
-        // console.log(nextQuestion);
-        console.log("correct " + correctGuesses);
-        console.log("incorrect guesses " + incorrectGuesses);
-        console.log(unansweredQuestions);
-        console.log("answer " + answer);
-       //need to fix progression to next question 
-       
-    };
-
     
 
     var questionProgress = function (){
-        if (counter < 5){
+        if (counter < questions.length){
          counter ++;
          setTimeout(autoTransition, 1000 * 3);  
-         
+         console.log("questionProgress " + counter);
          function autoTransition() { 
          questionOne();
          }
-        } else {
+        };
+        
+        if (counter >= questions.length){
          finalScore();
         };
      };
