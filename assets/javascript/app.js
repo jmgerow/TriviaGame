@@ -1,10 +1,3 @@
-// need to have page open with start button.  document.ready?
-// need to enable on click for start button
-// need to display first question with timer, question, and 4 possible answers. 
-// need to show if answer was correct or not by writing to html
-// need to automatically go to next question
-// when all questions are completed, show score
-// add reset button to score page to reset game
 
 var startButton = "Start";
 var timer = 20;
@@ -16,7 +9,7 @@ var guess = "";
 var counter = 0;        
 var questions = [
          {
-            question: "Which actor was in both 'Jurassic Park' and 'Thor Ragnarok?'",
+            question: "Which actor was in both 'Jurassic Park' and 'Thor Ragnarok'?",
             choices: ["Ryan Reynolds", "Chris Pratt", "Jeff Goldblum", "Heath Ledger"],
             answer: "Jeff Goldblum"
         },
@@ -31,7 +24,7 @@ var questions = [
             answer: "Date Night"
         },
         {
-            question: "Which actor has not played James Bond",
+            question: "Which actor has not played James Bond?",
             choices: ["Daniel Craig", "George Lazenby", "Roger Moore", "Harrison Ford"],
             answer: "Harrison Ford"
         },
@@ -47,29 +40,7 @@ var questions = [
         }
              
     ];
-    $("#timer").html(timer);
-    var intervalId;
-
-        function run() {
-            clearInterval(intervalId);
-            intervalId = setInterval(decrement, 1000);
-        };
- 
-
-        function decrement() {
-           
-            timer--;
-            $("#timer").html(timer);
-        if (timer === 0){       
-            
-            stop();
-            answerChecker();
-        }
-        };
-  
-        function stop() {
-            clearInterval(intervalId);  
-        };
+    
           
 
 $(document).ready(function() {
@@ -78,7 +49,39 @@ $(document).ready(function() {
 
      // load first question
      $("#start").on("click", function() {
-       
+     
+        $("#timer").html(timer);
+        var intervalId;
+    
+            function run() {
+                clearInterval(intervalId);
+                intervalId = setInterval(decrement, 1000);
+            };
+     
+    
+            function decrement() {
+               
+                timer--;
+                $("#timer").html(timer);
+                if (timer === 0){       
+                
+                stop();
+                $("#secondChoice").empty();
+                $("#thirdChoice").empty();
+                $("#fourthChoice").empty();
+                $("#question").html("Time's up!");
+                $("#firstChoice").html("The correct answer is " + answer);
+                unansweredQuestions ++;
+                questionProgress();
+                console.log("counter timeup" + counter);
+            };
+            };
+      
+            function stop() {
+                clearInterval(intervalId);  
+            };    
+
+
     run(); 
     questionOne();
      
@@ -89,13 +92,12 @@ $(document).ready(function() {
     var questionOne = function() {
         $("#resetButton").empty();
         $("#start").empty();
-        answer = "";
-        guess = "";
-        answer = questions[counter].answer;
-
-        // create interval for time and stop... ****Stop is not working****
-        
+        $(guess).empty();
+        $(answer).empty();
         timer = 20;
+        answer = questions[counter].answer;
+        
+      
        
     
         $("#question").html(questions[counter].question);
@@ -140,6 +142,7 @@ $(document).ready(function() {
        
     };
 
+    
     var answerChecker = function(){
         if (guess === answer){
             $("#timer").empty();
@@ -151,9 +154,11 @@ $(document).ready(function() {
             correctGuesses ++;
             questionProgress();
             console.log("counter correct" + counter);
-
+    
         }; 
-        
+        // the second if statement to determine when an answer is incorrect is causing the counter
+        // to double up and is breaking the game.  I am not sure why this is occuring since
+        // this should only be called when the guess does not equal the correct answer.
         if (guess != answer) {
             $("#timer").empty();
             $("#secondChoice").empty();
@@ -165,26 +170,14 @@ $(document).ready(function() {
             questionProgress(); 
             console.log("counter incorrect" + counter);
         };
-        // timer is not expiring at 0 - need to fix  
-        if (timer === 0){
-            // stop();
-            $("#secondChoice").empty();
-            $("#thirdChoice").empty();
-            $("#fourthChoice").empty();
-            $("#question").html("Time's up!");
-            $("#firstChoice").html("The correct answer is " + answer);
-            unansweredQuestions ++;
-            questionProgress();
-            console.log("counter timeup" + counter);
-        };
-        
-        
+         
         };
     
-
+    
     var questionProgress = function (){
         if (counter < questions.length){
          counter ++;
+         
          setTimeout(autoTransition, 1000 * 3);  
          console.log("questionProgress " + counter);
          function autoTransition() { 
@@ -196,7 +189,7 @@ $(document).ready(function() {
          finalScore();
         };
      };
-
+    
     var finalScore = function(){
         $("#timer").empty();
         $("#question").empty();
@@ -216,8 +209,8 @@ $(document).ready(function() {
             questionOne();   
         });
         
-    };
-    
+    }; 
     
 
-});    
+});  
+
