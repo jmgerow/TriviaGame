@@ -58,47 +58,58 @@ $(document).ready(function() {
                 intervalId = setInterval(decrement, 1000);
             };
      
-    
-            function decrement() {
-               
+
+            var decrement = function(){
                 timer--;
                 $("#timer").html(timer);
                 if (timer === 0){       
                 
-                stop();
-                $("#secondChoice").empty();
-                $("#thirdChoice").empty();
-                $("#fourthChoice").empty();
-                $("#question").html("Time's up!");
-                $("#firstChoice").html("The correct answer is " + answerMaster);
-                unansweredQuestions ++;
-                counter ++;
-                setTimeout(autoTransition, 1000 * 3);  
-                    console.log("questionProgress " + counter);
-                    function autoTransition() { 
-                    questionOne();
-                }
-                // questionProgress();
-                console.log("counter timeup" + counter);
-            };
+                    stop();
+                    $("#secondChoice").empty();
+                    $("#thirdChoice").empty();
+                    $("#fourthChoice").empty();
+                    $("#question").html("Time's up!");
+                    $("#firstChoice").html("The correct answer is " + answerMaster);
+                    unansweredQuestions ++;
+                    counter ++;
+                    setTimeout(autoTransition, 1000 * 3);  
+                        console.log("questionProgress " + counter);
+                        function autoTransition() { 
+                        questionOne();
+                    }
+                    // questionProgress();
+                    console.log("counter timeup" + counter);
+                };
+            }
+    
+
+
+            // function decrement() {
+               
+            //     timer--;
+            //     $("#timer").html(timer);
+               
             // if (timer > 0) {
             //     run();
             // };
-            };
+            // };
       
             function stop() {
                 clearInterval(intervalId);  
             };    
-
+            
 
     run(); 
     questionOne();
      
      })
 
+
+     
     // variable to call questions based on var counter value
     
     var questionOne = function() {
+        // run();
         $("#resetButton").empty();
         $("#start").empty();
         $(guess).empty();
@@ -182,23 +193,23 @@ $(document).ready(function() {
         // this should only be called when the guess does not equal the correct answer.
         // this is currently commented out to allow game to run smoothly for correct guesses:
 
-        // if (guess != answerMaster) {
-        //     $("#timer").empty();
-        //     $("#secondChoice").empty();
-        //     $("#thirdChoice").empty();
-        //     $("#fourthChoice").empty();
-        //     $("#question").html("Wrong!");
-        //     $("#firstChoice").html("The correct answer is " + answerMaster);
-        //     incorrectGuesses ++;
-        //     counter ++;
-        //     setTimeout(autoTransition, 1000 * 3);  
+        if (guess != answerMaster) {
+            $("#timer").empty();
+            $("#secondChoice").empty();
+            $("#thirdChoice").empty();
+            $("#fourthChoice").empty();
+            $("#question").html("Wrong!");
+            $("#firstChoice").html("The correct answer is " + answerMaster);
+            incorrectGuesses ++;
+            counter ++;
+            setTimeout(autoTransition, 1000 * 3);  
          
-        //     function autoTransition() { 
-        //     questionOne();
-        //     }
-        //     // questionProgress(); 
-        //     console.log("counter incorrect" + counter);
-        // };
+            function autoTransition() { 
+            questionOne();
+            }
+            // questionProgress(); 
+            console.log("counter incorrect" + counter);
+        };
         
         // runs finalScore once all questions are completed
         if (counter >= questions.length){
