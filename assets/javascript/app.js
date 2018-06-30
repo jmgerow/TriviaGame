@@ -1,12 +1,14 @@
 
+$(document).ready(function() {
 var startButton = "Start";
-var timer = 20;
+var timer = 10;
 var correctGuesses = 0;
 var incorrectGuesses = 0;
 var unansweredQuestions = 0;
 var answerMaster = "";
 var guess = "";
-var counter = 0;        
+var counter = 0;      
+
 var questions = [
          {
             question: "Which actor was in both 'Jurassic Park' and 'Thor Ragnarok'?",
@@ -41,9 +43,60 @@ var questions = [
              
     ];
     
-          
+    var intervalId;
+    
+    function run() {
+        clearInterval(intervalId);
+        intervalId = setInterval(decrement, 1000);
+    };
 
-$(document).ready(function() {
+
+    var decrement = function(){
+        timer--;
+        $("#timer").html(timer);
+        if (timer === 0){       
+        
+            stop();
+            $("#secondChoice").empty();
+            $("#thirdChoice").empty();
+            $("#fourthChoice").empty();
+            $("#question").html("Time's up!");
+            $("#firstChoice").html("The correct answer is " + answerMaster);
+            unansweredQuestions ++;
+            counter ++;
+
+            setTimeout(autoTransition, 1000 * 3);  
+                console.log("questionProgress " + counter);
+
+                function autoTransition() { 
+                timer = 10;
+                run();    
+                questionOne();
+            }
+            // questionProgress();
+            console.log("counter timeup" + counter);
+        };
+    }
+
+
+
+    // function decrement() {
+       
+    //     timer--;
+    //     $("#timer").html(timer);
+       
+    // if (timer > 0) {
+    //     run();
+    // };
+    // };
+
+    function stop() {
+        clearInterval(intervalId); 
+        $('#timer').empty(); 
+        
+    };   
+
+
      //begin game
      $("#start").append(startButton);
 
@@ -51,52 +104,7 @@ $(document).ready(function() {
      $("#start").on("click", function() {
      
         $("#timer").html(timer);
-        var intervalId;
-    
-            function run() {
-                clearInterval(intervalId);
-                intervalId = setInterval(decrement, 1000);
-            };
-     
-
-            var decrement = function(){
-                timer--;
-                $("#timer").html(timer);
-                if (timer === 0){       
-                
-                    stop();
-                    $("#secondChoice").empty();
-                    $("#thirdChoice").empty();
-                    $("#fourthChoice").empty();
-                    $("#question").html("Time's up!");
-                    $("#firstChoice").html("The correct answer is " + answerMaster);
-                    unansweredQuestions ++;
-                    counter ++;
-                    setTimeout(autoTransition, 1000 * 3);  
-                        console.log("questionProgress " + counter);
-                        function autoTransition() { 
-                        questionOne();
-                    }
-                    // questionProgress();
-                    console.log("counter timeup" + counter);
-                };
-            }
-    
-
-
-            // function decrement() {
-               
-            //     timer--;
-            //     $("#timer").html(timer);
-               
-            // if (timer > 0) {
-            //     run();
-            // };
-            // };
-      
-            function stop() {
-                clearInterval(intervalId);  
-            };    
+         
             
 
     run(); 
@@ -104,18 +112,22 @@ $(document).ready(function() {
      
      })
 
+    // var checkTimer = function () {
+    //     if (timer === 0){
 
+    //     }
+    // }
      
     // variable to call questions based on var counter value
     
     var questionOne = function() {
-        // run();
+        run();
         $("#resetButton").empty();
         $("#start").empty();
         $(guess).empty();
         $(answerMaster).empty();
-        // timer is not resetting properly when questionOne is called after timer expires
-        timer = 20;
+        
+        timer = 10;
         answerMaster = questions[counter].answer;
         
       
@@ -131,25 +143,25 @@ $(document).ready(function() {
         $("#firstChoice").on("click", function() {
         
             guess = questions[counter].choices[0];
-
+            stop();
             answerChecker();   
         });
         $("#secondChoice").on("click", function() {
             
             guess = questions[counter].choices[1];
-        
+            stop();
             answerChecker();   
         });
         $("#thirdChoice").on("click", function() {
             
             guess = questions[counter].choices[2];
-            
+            stop();    
             answerChecker();  
         });
         $("#fourthChoice").on("click", function() {
             
             guess = questions[counter].choices[3];
-            
+            stop();
             answerChecker();  
         });
 
@@ -167,6 +179,20 @@ $(document).ready(function() {
        
     };
 
+    //const answerChecker = function (guess, answerMaster) {
+    // switch(guess===answerMaster): {
+        //case true:
+
+        //break;
+
+        //default:
+
+        //break;
+
+    // }
+    
+
+
     // answerChecker determines if user guess is correct or not and establishes next step
     // to do - if statement for incorrect answers is not currently working. see below
     var answerChecker = function(){
@@ -179,37 +205,41 @@ $(document).ready(function() {
             $("#question").html("Correct!");
             correctGuesses ++;
             counter ++;
+            stop();
             setTimeout(autoTransition, 1000 * 3);  
          
             function autoTransition() { 
+            timer = 10;    
             questionOne();
             }
             // questionProgress();
             console.log("counter correct" + counter);
     
-        }; 
+        };
         // the second if statement to determine when an answer is incorrect is causing the counter
         // to double up and is breaking the game.  I am not sure why this is occuring since
         // this should only be called when the guess does not equal the correct answer.
         // this is currently commented out to allow game to run smoothly for correct guesses:
 
-        if (guess != answerMaster) {
-            $("#timer").empty();
-            $("#secondChoice").empty();
-            $("#thirdChoice").empty();
-            $("#fourthChoice").empty();
-            $("#question").html("Wrong!");
-            $("#firstChoice").html("The correct answer is " + answerMaster);
-            incorrectGuesses ++;
-            counter ++;
-            setTimeout(autoTransition, 1000 * 3);  
+        //  else if (guess !== answerMaster) {
+        //     $("#timer").empty();
+        //     $("#secondChoice").empty();
+        //     $("#thirdChoice").empty();
+        //     $("#fourthChoice").empty();
+        //     $("#question").html("Wrong!");
+        //     $("#firstChoice").html("The correct answer is " + answerMaster);
+        //     incorrectGuesses ++;
+        //     counter ++;
+        //     stop();
+        //     setTimeout(autoTransition, 1000 * 3);  
          
-            function autoTransition() { 
-            questionOne();
-            }
-            // questionProgress(); 
-            console.log("counter incorrect" + counter);
-        };
+        //     function autoTransition() { 
+        //     timer = 5;    
+        //     questionOne();
+        //     }
+        //     // questionProgress(); 
+        //     console.log("counter incorrect" + counter);
+        // };
         
         // runs finalScore once all questions are completed
         if (counter >= questions.length){
